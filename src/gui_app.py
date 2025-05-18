@@ -2,28 +2,29 @@
 # -*- coding: utf-8 -*-
 
 import tkinter as tk
-from tkinter import messagebox, filedialog, ttk
-import os
+from tkinter import filedialog, messagebox, ttk
+
 import pandas as pd
-import pyarrow.parquet as pq
-from src.data_manager import add_person, filter_by_month, delete_by_column
+
+from src.data_manager import add_person, delete_by_column, filter_by_month
+
 
 def run_gui():
     def create_empty_parquet(filepath):
-        empty_df = pd.DataFrame(columns=['Фамилия', 'Имя', 'Телефон', 'Дата рождения'])
+        empty_df = pd.DataFrame(columns=["Фамилия", "Имя", "Телефон", "Дата рождения"])
         empty_df.to_parquet(filepath, index=False)
-    
+
     def ask_file():
         file_path = filedialog.askopenfilename(
             title="Выберите parquet-файл",
             filetypes=[("Parquet files", "*.parquet")],
-            defaultextension=".parquet"
+            defaultextension=".parquet",
         )
         if not file_path:
             file_path = filedialog.asksaveasfilename(
                 title="Создать новый parquet-файл",
                 filetypes=[("Parquet files", "*.parquet")],
-                defaultextension=".parquet"
+                defaultextension=".parquet",
             )
             if file_path:
                 create_empty_parquet(file_path)
@@ -39,7 +40,13 @@ def run_gui():
 
     def on_add():
         try:
-            add_person(last_name_var.get(), first_name_var.get(), phone_var.get(), birthdate_var.get(), file_path)
+            add_person(
+                last_name_var.get(),
+                first_name_var.get(),
+                phone_var.get(),
+                birthdate_var.get(),
+                file_path,
+            )
             messagebox.showinfo("Успех", "Запись добавлена!")
         except ValueError as e:
             messagebox.showerror("Ошибка", str(e))

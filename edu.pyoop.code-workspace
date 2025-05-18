@@ -11,9 +11,9 @@
 		"editor.accessibilitySupport": "off",
 		"accessibility.signals.clear": {
 			"sound": "off",
-			"announcement": "off" 
+			"announcement": "off"
 		},
-		
+
 		"files.exclude": {
 			".venv": true,
 			".pytest_cache": true,
