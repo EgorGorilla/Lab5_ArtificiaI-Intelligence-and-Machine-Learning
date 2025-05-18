@@ -1,11 +1,23 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, filedialog, ttk
 from src.data_manager import add_person, filter_by_month, delete_by_column
 
 def run_gui():
+    file_path = filedialog.askopenfilename(
+        title="Выберите parquet-файл",
+        filetypes=[("Parquet files", "*.parquet")],
+        defaultextension=".parquet"
+    )
+    if not file_path:
+        messagebox.showerror("Ошибка", "Файл не выбран.")
+        return
+
     def on_add():
         try:
-            add_person(last_name_var.get(), first_name_var.get(), phone_var.get(), birthdate_var.get())
+            add_person(last_name_var.get(), first_name_var.get(), phone_var.get(), birthdate_var.get(), file_path)
             messagebox.showinfo("Успех", "Запись добавлена!")
         except ValueError as e:
             messagebox.showerror("Ошибка", str(e))
@@ -13,7 +25,7 @@ def run_gui():
     def on_filter():
         try:
             month = int(month_var.get())
-            results = filter_by_month(month)
+            results = filter_by_month(month, file_path)
             result_text.delete("1.0", tk.END)
             if results.empty:
                 result_text.insert(tk.END, "Нет людей с днем рождения в этом месяце.")
@@ -24,7 +36,7 @@ def run_gui():
 
     def on_delete():
         try:
-            delete_by_column(delete_column_var.get(), delete_value_var.get())
+            delete_by_column(delete_column_var.get(), delete_value_var.get(), file_path)
             messagebox.showinfo("Готово", "Удаление завершено")
         except ValueError as e:
             messagebox.showerror("Ошибка", str(e))
